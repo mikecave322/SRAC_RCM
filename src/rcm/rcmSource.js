@@ -67,5 +67,11 @@ export function mapRcmBooking(r, timezoneOffset = '+10:00') {
     flightNumber: pick('flightin', 'flightnumber', 'arrivalflight') ?? null,
     arrivalAt: parseLocalDateTime(pick('flightarrivaldatetime', 'arrivaldatetime', 'arrival_at'), timezoneOffset),
     arrivalAirport: pick('arrivalairport') ?? null,
+    docsComplete: toBool(pick('documentscomplete', 'docscomplete', 'checkincomplete', 'onlinecheckincomplete')),
   };
+}
+
+// RCM flags may come back as true/false, 1/0, "Y"/"N", "yes"/"no"...
+function toBool(value) {
+  return ['true', '1', 'y', 'yes'].includes(String(value ?? '').trim().toLowerCase());
 }

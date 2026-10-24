@@ -16,6 +16,7 @@ function buildContext(booking) {
     airportCode,
     infographicUrl: airportCode ? config.infographics[airportCode] : null,
     business: config.business,
+    docsComplete: Boolean(booking.docsComplete),
     docsUrl: config.business.docsUrl.replace('{ref}', encodeURIComponent(booking.reference)),
     pickupDate: fmt({ weekday: 'long', day: 'numeric', month: 'long' }),
     pickupTime: fmt({ hour: 'numeric', minute: '2-digit' }),
@@ -26,7 +27,7 @@ function buildContext(booking) {
  * One scan: pull bookings around today, work out which messages are due, send them.
  * Safe to run as often as you like — already-sent messages are tracked in the sent log.
  */
-export async function runOnce({ source, whatsapp, sentLog, now = new Date(), logger = console }) {
+export async function runOnce({ source, whatsapp, store, now = new Date(), logger = console }) {
   const bookings = await source.fetchBookings({
     from: new Date(now.getTime() - 60 * DAY), // long hires still on the road need mid-trip check-ins
     to: new Date(now.getTime() + 8 * DAY),
@@ -36,12 +37,14 @@ export async function runOnce({ source, whatsapp, sentLog, now = new Date(), log
 
   for (const booking of bookings.filter(isActive)) {
     for (const stage of dueStages(booking, now)) {
-      if (sentLog.has(booking.id, stage)) continue;
+      if (await store.has(booking.id, stage)) continue;
+      // Dry runs only log, so they never claim or record anything.
+      if (!whatsapp.dryRun && !(await store.claim(booking.id, stage, now))) continue; // another instance has it
 
       const to = normalisePhone(booking.phone);
       if (!to) {
         logger.warn(`Booking ${booking.reference}: no valid mobile number, skipping ${stage}`);
-        sentLog.record(booking.id, stage, { skipped: 'no valid phone' });
+        if (!whatsapp.dryRun) await store.complete(booking.id, stage, { skipped: 'no valid phone' });
         summary.skipped++;
         continue;
       }
@@ -52,12 +55,16 @@ export async function runOnce({ source, whatsapp, sentLog, now = new Date(), log
       }
       const message = MESSAGES[stage](ctx);
       try {
-        const result = await whatsapp.send(to, message);
-        if (!whatsapp.dryRun) sentLog.record(booking.id, stage, { to, result });
-        logger.log(`Booking ${booking.reference}: sent ${stage} to ${to}`);
+        const results = await whatsapp.send(to, message);
+        if (!whatsapp.dryRun) {
+          const messageIds = results.map((r) => r.messages?.[0]?.id).filter(Boolean);
+          await store.complete(booking.id, stage, { to, messageIds });
+        }
+        logger.log(`Booking ${booking.reference}: sent ${stage}${ctx.docsComplete ? ' (docs complete)' : ''} to ${to}`);
         summary.sent++;
       } catch (err) {
-        // Not recorded, so it is retried on the next scan while the window is still open.
+        // Released, so it is retried on the next scan while the window is still open.
+        if (!whatsapp.dryRun) await store.release(booking.id, stage);
         logger.error(`Booking ${booking.reference}: failed to send ${stage}: ${err.message}`);
         summary.failed++;
       }

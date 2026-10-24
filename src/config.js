@@ -19,7 +19,14 @@ const env = (key, fallback = '') => process.env[key] ?? fallback;
 export const config = {
   bookingSource: env('BOOKING_SOURCE', 'file'),
   bookingsFile: env('BOOKINGS_FILE', 'data/sample-bookings.json'),
-  sentLogFile: env('SENT_LOG_FILE', 'data/sent-log.json'),
+
+  store: {
+    type: env('STORE', 'json'),
+    jsonFile: env('SENT_LOG_FILE', 'data/sent-log.json'),
+    sqliteFile: env('SQLITE_FILE', 'data/notifier.db'),
+    databaseUrl: env('DATABASE_URL'),
+  },
+
   timezoneOffset: env('TIMEZONE_OFFSET', '+10:00'),
   scanIntervalMinutes: Number(env('SCAN_INTERVAL_MINUTES', '15')),
   dryRun: env('DRY_RUN', 'true') === 'true',
@@ -43,6 +50,14 @@ export const config = {
     accessToken: env('WHATSAPP_ACCESS_TOKEN'),
     mode: env('WHATSAPP_MODE', 'template'),
     templateLanguage: env('WHATSAPP_TEMPLATE_LANGUAGE', 'en'),
+  },
+
+  webhook: {
+    port: Number(env('PORT', env('WEBHOOK_PORT', '3000'))),
+    path: env('WEBHOOK_PATH', '/webhook/whatsapp'),
+    verifyToken: env('WHATSAPP_VERIFY_TOKEN'),
+    appSecret: env('WHATSAPP_APP_SECRET'),
+    forwardUrl: env('REPLY_FORWARD_URL'),
   },
 
   infographics: {

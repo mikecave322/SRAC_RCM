@@ -18,6 +18,7 @@ export class WhatsAppClient {
    * Sends one prepared message (see src/messages/messages.js).
    * @param {string} to  Phone number in international digits, e.g. 61412345678
    * @param {{template: {name: string, params: string[]}, text: string, imageUrl?: string}} message
+   * @returns {Promise<object[]>} API responses; each has messages[0].id, used to match delivery receipts
    */
   async send(to, message) {
     if (this.dryRun) this.logger.log(`[dry-run] message text for ${to}: ${message.text}`);

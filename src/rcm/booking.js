@@ -16,6 +16,7 @@
  * @property {string|null} flightNumber
  * @property {Date|null} arrivalAt    Flight arrival time, if the customer gave one
  * @property {string|null} arrivalAirport  "OOL" / "BNE" if known
+ * @property {boolean} docsComplete   true when RCM shows the customer's documents are done
  */
 
 // Parses an RCM local date/time ("2026-11-01 09:30", "01/11/2026 09:30", ISO...) into a Date.

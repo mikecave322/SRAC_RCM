@@ -24,7 +24,8 @@
     "dropoffdatetime": "2026-11-02 10:00",
     "pickuplocation": "Brisbane Airport - Domestic",
     "flightin": "NZ145",
-    "flightarrivaldatetime": "2026-10-26 13:30"
+    "flightarrivaldatetime": "2026-10-26 13:30",
+    "documentscomplete": "Y"
   },
   {
     "reservationid": "1003",

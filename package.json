@@ -6,10 +6,15 @@
   "main": "src/index.js",
   "engines": { "node": ">=20" },
   "scripts": {
-    "start": "node src/index.js watch",
-    "run-once": "node src/index.js run",
-    "dry-run": "node src/index.js run --dry-run",
+    "start": "node --disable-warning=ExperimentalWarning src/index.js watch",
+    "webhook": "node --disable-warning=ExperimentalWarning src/index.js webhook",
+    "all": "node --disable-warning=ExperimentalWarning src/index.js all",
+    "run-once": "node --disable-warning=ExperimentalWarning src/index.js run",
+    "dry-run": "node --disable-warning=ExperimentalWarning src/index.js run --dry-run",
     "test": "node --test test/*.test.js"
+  },
+  "optionalDependencies": {
+    "pg": "^8.13.1"
   },
   "license": "UNLICENSED",
   "private": true

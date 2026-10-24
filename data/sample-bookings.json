@@ -1,0 +1,62 @@
+[
+  {
+    "reservationid": "1001",
+    "reservationref": "GC1001",
+    "status": "confirmed",
+    "firstname": "Sarah",
+    "lastname": "Nguyen",
+    "mobile": "0412 345 678",
+    "email": "sarah@example.com",
+    "pickupdatetime": "2026-10-31 10:00",
+    "dropoffdatetime": "2026-11-07 10:00",
+    "pickuplocation": "Gold Coast Airport",
+    "flightin": "JQ402",
+    "flightarrivaldatetime": "2026-10-31 09:15"
+  },
+  {
+    "reservationid": "1002",
+    "reservationref": "BN1002",
+    "status": "confirmed",
+    "firstname": "James",
+    "lastname": "Walker",
+    "mobile": "+64 21 555 1234",
+    "pickupdatetime": "2026-10-26 14:00",
+    "dropoffdatetime": "2026-11-02 10:00",
+    "pickuplocation": "Brisbane Airport - Domestic",
+    "flightin": "NZ145",
+    "flightarrivaldatetime": "2026-10-26 13:30"
+  },
+  {
+    "reservationid": "1003",
+    "reservationref": "SP1003",
+    "status": "on hire",
+    "firstname": "Priya",
+    "lastname": "Shah",
+    "mobile": "0400 111 222",
+    "pickupdatetime": "2026-10-20 09:00",
+    "dropoffdatetime": "2026-10-28 09:00",
+    "pickuplocation": "Surfers Paradise Depot"
+  },
+  {
+    "reservationid": "1004",
+    "reservationref": "BN1004",
+    "status": "cancelled",
+    "firstname": "Tom",
+    "lastname": "Lee",
+    "mobile": "0400 333 444",
+    "pickupdatetime": "2026-10-27 09:00",
+    "dropoffdatetime": "2026-10-30 09:00",
+    "pickuplocation": "Brisbane Airport"
+  },
+  {
+    "reservationid": "1005",
+    "reservationref": "BC1005",
+    "status": "confirmed",
+    "firstname": "Liam",
+    "lastname": "O'Brien",
+    "mobile": "0433 999 000",
+    "pickupdatetime": "2026-10-24 15:00",
+    "dropoffdatetime": "2026-10-25 15:00",
+    "pickuplocation": "Brisbane City Depot"
+  }
+]

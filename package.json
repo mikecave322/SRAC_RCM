@@ -1,0 +1,16 @@
+{
+  "name": "rcm-whatsapp-notifier",
+  "version": "0.1.0",
+  "description": "Scans Rental Car Manager bookings and sends WhatsApp messages at key points of the customer journey.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js watch",
+    "run-once": "node src/index.js run",
+    "dry-run": "node src/index.js run --dry-run",
+    "test": "node --test test/*.test.js"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

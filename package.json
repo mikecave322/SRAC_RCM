@@ -11,6 +11,7 @@
     "all": "node --disable-warning=ExperimentalWarning src/index.js all",
     "run-once": "node --disable-warning=ExperimentalWarning src/index.js run",
     "dry-run": "node --disable-warning=ExperimentalWarning src/index.js run --dry-run",
+    "test-send": "node --disable-warning=ExperimentalWarning src/index.js test-send",
     "test": "node --test test/*.test.js"
   },
   "optionalDependencies": {

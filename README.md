@@ -37,6 +37,69 @@ To run it for real, set `DRY_RUN=false`, then choose one:
 | `npm run run-once` | One scan, then exits; use from cron, e.g. `*/15 * * * *` |
 | `npm run webhook` | Only the webhook that receives replies and receipts |
 | `npm run all` | Scanning and the webhook in one process |
+| `npm run test-send -- <mobile> all` | Sends sample messages to your phone (see below) |
+
+## Testing on your own WhatsApp
+
+Meta gives every new WhatsApp app a free **test phone number**. It can message up to 5 personal WhatsApp numbers that you verify, so you can see exactly what customers will get on your own phone. You don't need business verification, approved templates or a payment method. Run these steps on your own computer.
+
+**1. Get a test number (about 10 minutes)**
+1. Go to https://developers.facebook.com, log in with Facebook, and click **My Apps → Create App**. Choose the **Business** type (or "Other" then "Business"), give it any name, and create it.
+2. On the app's dashboard, find **WhatsApp** and click **Set up**. If asked, create or pick a business portfolio.
+3. Open **WhatsApp → API Setup**. It shows:
+   - a **temporary access token** (lasts 24 hours; click "Generate" for a new one),
+   - a test **From** number and its **Phone number ID**,
+   - a **To** box. Add your personal mobile there, and enter the code WhatsApp sends you.
+
+**2. Configure the project**
+```bash
+cp .env.example .env
+```
+In `.env`, set:
+```
+WHATSAPP_PHONE_NUMBER_ID=<Phone number ID from API Setup>
+WHATSAPP_ACCESS_TOKEN=<temporary access token>
+DRY_RUN=false
+BUSINESS_PHONE=<your number, shown in the messages>
+DOCS_URL=https://example.com/checkin?ref={ref}
+INFOGRAPHIC_OOL_URL=<any public image link, for now>
+INFOGRAPHIC_BNE_URL=<any public image link, for now>
+```
+
+**3. Check the connection**
+```bash
+npm run test-send -- 0412345678 hello_world
+```
+Use your own mobile number. You should get Meta's "Hello World" message on WhatsApp.
+
+**4. See your own messages**
+
+Your own templates aren't approved yet, so use free-form text for testing:
+1. On your phone, **send any message to the test number** (e.g. "hi"). This opens WhatsApp's 24-hour window.
+2. In `.env`, set `WHATSAPP_MODE=text`.
+3. Run:
+   ```bash
+   npm run test-send -- 0412345678 all
+   ```
+   You'll receive all 8 messages: week out, two days (with and without docs done), day of at Gold Coast, Brisbane and a depot (with the infographic image), and mid trip. To send one, replace `all` with `week_out`, `two_days`, `day_of_ool`, `day_of_bne`, `mid_trip` and so on.
+
+Reply to any of them on your phone to test the webhook (below). Free-form mode stops working 24 hours after your last message to the test number; just message it again.
+
+**5. Try the full booking scan**
+
+Put your mobile number in `data/sample-bookings.json`, then pretend it's a particular time:
+```bash
+npm run run-once -- --now=2026-10-24T13:30+10:00
+```
+Each message only sends once, so delete `data/sent-log.json` to send them again.
+
+**Common errors**
+- `131030 Recipient phone number not in allowed list`: add the number in the **To** box on API Setup.
+- `190 ... access token has expired`: generate a new temporary token.
+- `131047 Re-engagement message` or `470`: the 24-hour window has closed. Message the test number from your phone again, or use `hello_world`.
+- `132001 Template name does not exist`: you're in `WHATSAPP_MODE=template` without your templates created. Use `text` mode for testing.
+
+**Going live:** add your real business number in WhatsApp Manager, create a permanent System User access token, get your templates approved, and switch back to `WHATSAPP_MODE=template`.
 
 ## Where to change things
 

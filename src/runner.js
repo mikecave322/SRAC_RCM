@@ -7,7 +7,7 @@ import { isActive } from './rcm/booking.js';
 
 const DAY = 24 * 60 * 60 * 1000;
 
-function buildContext(booking) {
+export function buildContext(booking) {
   const fmt = (opts) =>
     new Intl.DateTimeFormat('en-AU', { timeZone: 'Australia/Brisbane', ...opts }).format(booking.pickupAt);
   const airportCode = detectAirport(booking);
